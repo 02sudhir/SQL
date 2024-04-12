@@ -6,8 +6,7 @@ insert into EMP_DETAIL  VALUES
 ("VIKAS", 29, "M", "2010-02-02", "PUNE", 250004),
 ("VIJAY", 21, "M", "2080-02-02", "KOLHAPUR", 25000),
 ("SHUBHAM", 55, "M", "2002-02-02", "CHADGAD", 540000),
-("MINAL", 27, "F", "2002-02-02", "PUNE", 85000),
-("AKSHADA", 29, "F", "2001-02-02", "SANGLE", 245000);
+("MINAL", 27, "F", "2002-02-02", "PUNE", 85000);
 
 
 By using the DISTINCT keyword in a function called COUNT, we can return the number of different countries.
@@ -117,7 +116,7 @@ SELECT CONCAT("SUHIDR","RAMA","AMRUSKAR") AS MERGED;
  //UPDATE
  
  UPDATE EMPLOYEE
- SET CITY="MULASHI",EMP_NAME="AKSHADA"
+ SET CITY="MULASHI",EMP_NAME="SNEHAL"
  WHERE EMP_ID=4;
  
  
