@@ -104,13 +104,13 @@ SELECT CONCAT("SUHIDR","RAMA","AMRUSKAR") AS MERGED;
  
  
  CREATE TABLE EMPLOYEE(EMP_ID  INT PRIMARY KEY, EMP_NAME VARCHAR(25),AGE INT(2),  GENDER CHAR(1),
- DEPT VARCHAR(20),CITY VARCHAR(8), DOJ DATE);
+ DEPT VARCHAR(20),CITY VARCHAR(8), DOJ DATE),SAL INT;
  
  INSERT INTO EMPLOYEE VALUES
- (1, "SUDHIR", 24, "M", "IT", "KOLHAPUR", "2022-12-9"),
- (2, "VIKAS", 29, "M", "IT", "PUNE", "2024-12-9"),
- (3, "RAJ", 29, "M", "IT", "PUNE", "2022-12-9"),
- (4, "MINAL", 24, "F", "IT", "SANGLI", "2025-12-9");
+ (1, "SUDHIR", 24, "M", "IT", "KOLHAPUR", "2022-12-9" ,50000),
+ (2, "VIKAS", 29, "M", "IT", "PUNE", "2024-12-9",3500),
+ (3, "RAJ", 29, "M", "IT", "PUNE", "2022-12-9",5643),
+ (4, "MINAL", 24, "F", "IT", "SANGLI", "2025-12-9",4316);
  
  
  //UPDATE
@@ -134,3 +134,159 @@ SELECT CONCAT("SUHIDR","RAMA","AMRUSKAR") AS MERGED;
  SELECT COUNT(EMP_ID) , AGE FROM EMPLOYEE
  GROUP BY AGE
  ORDER BY COUNT(EMP_ID) ASC;
+ 
+ 
+ // Having 
+ 
+ SELECT EMP_NAME,AVG(SAL) 
+ FROM EMPLOYEE
+ GROUP BY EMP_NAME
+ HAVING COUNT(SALARY) > 20000
+ 
+ 
+ -- This SQL query counts the number of customers in each country who have a grade assigned to them, 
+-- and displays the country along with the count, but only for countries where the count of grades is greater than 2.
+-- SELECT statement begins
+SELECT 
+    cust_country, -- Selects the 'cust_country' column
+    COUNT(grade) -- Counts the number of grades for each country
+FROM 
+    customer -- Specifies the 'customer' table to retrieve data from
+GROUP BY 
+    cust_country -- Groups the result set by the 'cust_country' column
+HAVING 
+    COUNT(grade) > 2; -- Filters the grouped results to include only countries where the count of grades is greater than 2
+	
+	
+	
+	
+//SubQuery
+
+	CREATE TABLE ORDERS
+	(ORDER_ID INT, PRODUCT_SOLD VARCHAR(30), SELLING FLOAT(5));
+	
+	INSERT INTO ORDERS1 VALUES
+	( 1, "CLOTHES",599),
+	( 2, "LAPTOP",40000),
+	( 3, "MOBILE",150000),
+	( 4, "JEWELLER",500000),
+	( 5,"SCENT",3000),
+	( 6,"BIKE",20000);
+
+
+INSERT  INTO ORDERS1
+SELECT  ORDER_ID , PRODUCT_SOLD ,SELLING 
+FROM  ORDERS1 WHERE SAL IN 
+(SELECT EMP_ID FROM EMPLOYEE WHERE SELLING > 10000);
+
+
+
+
+//triggers
+CREATE TRIGGER AGE_VERIFY
+BEFORE INSERT ON EMPLOYEE
+FOR EACH ROW 
+BEGIN
+    IF NEW.AGE < 0 THEN
+        SET NEW.AGE = 0;
+    END IF;
+END;
+
+
+CREATE TABLE SALARY(
+EID INT PRIMARY KEY,
+VALIDFROM DATE NOT NULL,
+AMOUNT FLOAT NOT NULL);
+
+INSERT INTO SALARY (EID, VALIDFROM,AMOUNT)
+VALUES (101,"2022-05-01", 55000),
+(102,"2005-12-06", 54600),
+(103,"2008-11-05", 45400),
+(104,"2012-08-06", 54650);
+
+
+
+CREATE TABLE SALDEL (ID INT PRIMARY KEY AUTO_INCREMENT,
+EID INT , VALIDFROM DATE NOT NULL,
+AMOUNT FLOAT NOT NULL,
+DELETEDAT TIMESTAMP DEFAULT NOW());
+
+
+DELIMITER $$
+CREATE TRIGGER SALARYDEL
+BEFORE DELETE
+ON SALARY
+FOR EACH ROW 
+BEGIN 
+INSERT INTO SALARYDEL(EID,VALIDFROM,AMOUNT)
+VALUES(OLD.EID ,OLD.VALIDFROM, OLD.AMOUNT);
+END
+
+
+
+
+
+select NAME ,CITY 
+FROM EMP_DETAIL WHERE SAL > ( SELECT AVG(SAL) FROM EMP_DETAIL);	
+
+
+
+
+
+
+CREATE TABLE player (
+    player_id INT PRIMARY KEY,
+    player_name VARCHAR(50),
+    team_name VARCHAR(50),
+    position VARCHAR(20),
+    age INT,
+    goals_scored INT
+);
+
+
+
+INSERT INTO player (player_id, player_name, team_name, position, age, goals_scored) VALUES
+(1, 'Lionel Messi', 'Paris Saint-Germain', 'Forward', 35, 750),
+(2, 'Cristiano Ronaldo', 'Al Nassr', 'Forward', 38, 800),
+(3, 'Neymar Jr', 'Paris Saint-Germain', 'Forward', 31, 400),
+(4, 'Kevin De Bruyne', 'Manchester City', 'Midfielder', 32, 120),
+(5, 'Virgil van Dijk', 'Liverpool', 'Defender', 32, 40),
+(6, 'Kylian Mbappe', 'Paris Saint-Germain', 'Forward', 25, 180),
+(7, 'Luka Modric', 'Real Madrid', 'Midfielder', 38, 80),
+(8, 'Sergio Ramos', 'Paris Saint-Germain', 'Defender', 37, 70),
+(9, 'Robert Lewandowski', 'Barcelona', 'Forward', 35, 500),
+(10, 'Alisson Becker', 'Liverpool', 'Goalkeeper', 31, 0);
+
+
+
+
+
+SELECT * FROM player;
+
+
+
+DELIMITER &&
+CREATE PROCEDURE TOP_PLAYERS2()
+BEGIN
+SELECT player_name, team_name,goals_scored
+FROM player WHERE goals_scored > 700;
+END &&
+DELIMITER ;
+
+
+CALL TOP_PLAYERS2();
+
+
+CREATE PROCEDURE UPDATEPLAYER
+(
+	
+	@PNAME VARCHAR(5),
+	@UEMAIL VARCHAR(5)
+)
+AS
+BEGIN
+INSERT INTO player VALUES(@PNAME,@UEMAIL)
+END;
+
+
+
